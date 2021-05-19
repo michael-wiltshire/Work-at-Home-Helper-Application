@@ -45,7 +45,24 @@ class DatabaseManager:
 
     def debug_get_all(self):
         self.cur.execute('SELECT * FROM activities')
-        print(self.cur.fetchall())
+        return self.cur.fetchall()
+
+    def get_activies_within_range(self, start: datetime.datetime, end: datetime.datetime):
+        '''
+        Returns a list of all activities within a certain range
+
+        Sample usage:
+        >>> x = DatabaseManager("CIS 211 LA")
+        >>> now = datetime.datetime.now()
+        >>> # Gets all activities within the last 3 hours
+        >>> x.get_activies_within_range(now - datetime.timedelta(hours=3), now)
+        '''
+        self.cur.execute('''
+                SELECT * FROM activities where not (start_time < ? or ? < start_time)''', 
+                (start, end)
+        )
+
+        return self.cur.fetchall()
         
 
         
