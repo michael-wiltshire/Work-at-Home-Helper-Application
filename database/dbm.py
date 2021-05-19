@@ -18,7 +18,7 @@ class DatabaseManager:
 
         # Connect to the timeworked database file and get it's cursor
         # which is required to operate on the file
-        self.con = sqlite3.connect('timeworked.db')
+        self.con = sqlite3.connect('timeworked.db', detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.con.cursor()
 
         self.cur.execute('''CREATE TABLE IF NOT EXISTS activities
