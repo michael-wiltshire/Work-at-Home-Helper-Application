@@ -109,6 +109,33 @@ class DatabaseManager:
 
         return self.cur.fetchone()
 
+    def edit_activity(self, rowid: int, job :str = None, description :str = None, 
+            start: datetime.datetime = None, duration: datetime.timedelta = None) -> True:
+        '''
+        Edits fields of a activity. Only edits fields that are not None.
+
+        >>> edit_activity(3, description="Help hours")
+        >>> edit_activity(3, duration=datetime.timedelta(hours=1.10))
+        '''
+
+        max_rowcount = 0
+
+        dur = None if duration is None else duration.seconds()
+        fields = [('job', job), ('desc', description), ('start_time', start), ('duration', dur)]
+
+        for field in fields:
+            if field[1] is None:
+                continue
+            self.cur.execute(f'UPDATE activities SET {field[0]} = ? WHERE rowid = ?', (field[1], rowid))
+            self.con.commit()
+            max_rowcount = max(max_rowcount, self.cur.rowcount)
+
+        if max_rowcount == 1:
+            return True
+        else:
+            return False
+
+
     def reset_db(self):
         self.cur.execute('''
             drop table activities;
