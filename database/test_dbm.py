@@ -7,7 +7,7 @@ class DatabaseBasicTests(unittest.TestCase):
     def setUp(self):
         self.jobname = "test job"
         self.dbm = DatabaseManager(self.jobname, "test.db")
-        self.dbm.reset_db()
+        self.dbm.reset_db(sure='yes')
 
     def test_add_activity(self):
         # Get activities before we start in case another test forgets to clean them up
@@ -125,7 +125,7 @@ class DatabaseBasicTests(unittest.TestCase):
             self.assertEqual(act1[i], act2[i])
 
     def tearDown(self):
-        self.dbm.reset_db()
+        self.dbm.reset_db(sure='yes')
 
 if __name__=='__main__':
     # When we run this file, run the tests
