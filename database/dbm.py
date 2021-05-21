@@ -26,7 +26,7 @@ class DatabaseManager:
              `job` VARCHAR(100) DEFAULT '',  
              `desc` VARCHAR(100) DEFAULT '',  
              `start_time` DATETIME NOT NULL,  
-             `durration` INT NOT NULL
+             `duration` INT NOT NULL
              )
         ''')
 
@@ -34,22 +34,39 @@ class DatabaseManager:
         '''Close the connection to the database on deletion'''
         self.con.close()
 
-    def add_activity(self, desc: str, start: datetime.datetime, durration: datetime.timedelta):
-        self.cur.execute('''INSERT INTO activities
-            (job, desc, start_time, durration)
-            values
-            (?, ?, ?, ?)
-        ''', (self.job, desc, start, durration.total_seconds()))
+    def add_activity(self, desc: str, start: datetime.datetime, duration: datetime.timedelta) -> bool:
+        '''Creates an activity given a description, start time, and duration.
 
-        self.con.commit()
+        Sample usage:
+        >>> x = DatabaseManger("CIS 211 LA")
+        >>> start = datetime.datetime(2021, 5, 4, 12, 0)
+        >>> duration = datetime.timedelta(hours=4)
+        >>> self.add_activitiy("Office hours", start, duration)
+        '''
+        try: 
+            self.cur.execute('''INSERT INTO activities
+                (job, desc, start_time, duration)
+                values
+                (?, ?, ?, ?)
+            ''', (self.job, desc, start, duration.total_seconds()))
+
+            self.con.commit()
+            return True
+        except:
+            self.con.rollback()
+            return False
+
 
     def debug_get_all(self):
-        self.cur.execute('SELECT *,rowid FROM activities')
+        self.cur.execute('SELECT rowid,* FROM activities')
         return self.cur.fetchall()
 
     def get_activies_within_range(self, start: datetime.datetime, end: datetime.datetime):
         '''
-        Returns a list of all activities within a certain range
+        Returns a list of all activities within a certain range as a list of tuples of (
+            rowid:int, job:str, description:str, start:datetime.datetime, duration:int
+        )
+
 
         Sample usage:
         >>> x = DatabaseManager("CIS 211 LA")
@@ -63,8 +80,21 @@ class DatabaseManager:
         )
 
         return self.cur.fetchall()
-        
+    
+    def get_activity(self, rowid: int):
+        '''
+        Returns a single activity as a tuple of (
+            rowid:int, job:str, description:str, start:datetime.datetime, duration:int
+        )
 
+        '''
+
+        self.cur.execute('''
+                Select rowid,* FROM activities where rowid=?''',
+                (rowid)
+        )
+
+        return self.cur.fetchall()
         
         
 
