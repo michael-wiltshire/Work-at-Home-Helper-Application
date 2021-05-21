@@ -16,6 +16,8 @@ class DatabaseManager:
         # Jobs should be managed one at a time
         self.job = job
 
+        self.filename = filename
+
         # Connect to the timeworked database file and get it's cursor
         # which is required to operate on the file
         self.con = sqlite3.connect('timeworked.db', detect_types=sqlite3.PARSE_DECLTYPES)
@@ -25,7 +27,7 @@ class DatabaseManager:
             (
              `job` VARCHAR(100) DEFAULT '',  
              `desc` VARCHAR(100) DEFAULT '',  
-             `start_time` DATETIME NOT NULL,  
+             `start_time` TIMESTAMP NOT NULL,  
              `duration` INT NOT NULL
              )
         ''')
@@ -34,7 +36,7 @@ class DatabaseManager:
         '''Close the connection to the database on deletion'''
         self.con.close()
 
-    def add_activity(self, desc: str, start: datetime.datetime, duration: datetime.timedelta) -> bool:
+    def add_activity(self, desc: str, start: datetime.datetime, duration: datetime.timedelta) -> int:
         '''Creates an activity given a description, start time, and duration.
 
         Sample usage:
@@ -51,13 +53,13 @@ class DatabaseManager:
             ''', (self.job, desc, start, duration.total_seconds()))
 
             self.con.commit()
-            return True
+            return self.cur.lastrowid
         except:
             self.con.rollback()
-            return False
+            return -1
 
 
-    def debug_get_all(self):
+    def debug_get_all(self) -> list:
         self.cur.execute('SELECT rowid,* FROM activities')
         return self.cur.fetchall()
 
@@ -89,12 +91,18 @@ class DatabaseManager:
 
         '''
 
-        self.cur.execute('''
-                Select rowid,* FROM activities where rowid=?''',
-                (rowid)
+        self.cur.execute('Select rowid,* FROM activities where rowid=?',
+                (rowid,)
         )
 
-        return self.cur.fetchall()
+        return self.cur.fetchone()
+
+    def reset_db(self):
+        self.cur.execute('''
+            drop table activities;
+        ''')
+        self.con.commit()
+        self.__init__(self.job, self.filename)
         
         
 
