@@ -120,7 +120,7 @@ class DatabaseManager:
 
         max_rowcount = 0
 
-        dur = None if duration is None else duration.seconds()
+        dur = None if duration is None else duration.seconds
         fields = [('job', job), ('desc', description), ('start_time', start), ('duration', dur)]
 
         for field in fields:
