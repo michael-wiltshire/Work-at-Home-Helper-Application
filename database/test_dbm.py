@@ -40,6 +40,38 @@ class DatabaseBasicTests(unittest.TestCase):
         self.assertEqual(thisJob[3], now-anhour)
         self.assertEqual(thisJob[4], 3600)
 
+        self.assertTrue(self.dbm.delete_activity(id))
+
+    def test_delete_activities(self):
+        # Add some dates just so we can quickly add activies
+        start = datetime.datetime.now()
+        duration = datetime.timedelta(seconds=100)
+
+        # Add some sample events, keep track of their id's
+        ids = []
+        ids.append(self.dbm.add_activity("activity 1", start, duration))
+        ids.append(self.dbm.add_activity("activity 2", start, duration))
+        ids.append(self.dbm.add_activity("activity 3", start, duration))
+        ids.append(self.dbm.add_activity("activity 4", start, duration))
+        ids.append(self.dbm.add_activity("activity 5", start, duration))
+
+        # Make sure adding those activities didn't fail
+        self.assertTrue(-1 not in ids)
+
+        # Get the length of all activities before we begin deleting them
+        activityCount = len(self.dbm.debug_get_all())
+
+        # Try deleting some of them, double deleting one should return false
+        self.assertTrue(self.dbm.delete_activity(ids[1]))
+        self.assertFalse(self.dbm.delete_activity(ids[1]))
+        self.assertTrue(self.dbm.delete_activity(ids[2]))
+
+        # There should be 2 less activities
+        self.assertEqual(activityCount-2, len(self.dbm.debug_get_all()))
+
+    def tearDown(self):
+        self.dbm.reset_db()
+
 if __name__=='__main__':
     # When we run this file, run the tests
     unittest.main()

@@ -9,7 +9,7 @@ import datetime
 
 class DatabaseManager:
 
-    def __init__(self, job: str, filename: str='timeworked.db') -> sqlite3.Cursor:
+    def __init__(self, job: str, filename: str='timeworked.db') -> sqlite3.Cursor: 
         '''Creates a connection to a database that will be interacted with for the rest
         of the lifespan of the class'''
 
@@ -20,7 +20,7 @@ class DatabaseManager:
 
         # Connect to the timeworked database file and get it's cursor
         # which is required to operate on the file
-        self.con = sqlite3.connect('timeworked.db', detect_types=sqlite3.PARSE_DECLTYPES)
+        self.con = sqlite3.connect(filename, detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.con.cursor()
 
         self.cur.execute('''CREATE TABLE IF NOT EXISTS activities
@@ -57,6 +57,18 @@ class DatabaseManager:
         except:
             self.con.rollback()
             return -1
+    def delete_activity(self, id: int) -> int:
+        try:
+            self.cur.execute('DELETE FROM activities where (rowid = ?)',
+                    (id,)
+            )
+            self.con.commit()
+            if self.cur.rowcount == 1:
+                return True
+            else:
+                return False
+        except:
+            return False
 
 
     def debug_get_all(self) -> list:
@@ -103,6 +115,8 @@ class DatabaseManager:
         ''')
         self.con.commit()
         self.__init__(self.job, self.filename)
+
+
         
         
 
