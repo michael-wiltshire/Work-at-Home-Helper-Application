@@ -187,7 +187,6 @@ class DatabaseManager:
             self.con.commit()
             self.__init__(self.job, self.filename)
         else:
-            print(sure)
             # Otherwise, print out some warning and instructions to delete everything
             print("Are you sure you'd like to delete this database and everything")
             print("in it? If so, call this function with 'yes' as an argument")
