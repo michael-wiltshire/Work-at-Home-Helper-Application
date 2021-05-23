@@ -10,8 +10,8 @@ import datetime
 import sys
 import os
 import csv
-import xlrd
-import openpyxl
+# import xlrd
+# import openpyxl
 from io import StringIO
 
 
@@ -42,38 +42,29 @@ def write_work_list(filename, number):
             des = activity[2]
             print("description", des)
             #print(len(activity[3]))
-            if '.' in activity[3]:
-                date_t = datetime.datetime.strptime(activity[3], '%Y-%m-%d %H:%M:%S.%f')
-                date = date_t.strftime("%m/%d/%Y")
-                start = date_t.strftime("%H:%M:%S.%f")
-                print("date:", date)
-                print("start:", start)
-            else:
-                date_t = datetime.datetime.strptime(activity[3], '%Y-%m-%d %H:%M:%S')
-                date = date_t.strftime("%m/%d/%Y")
-                start = date_t.strftime("%H:%M:%S")
-                print("date", date)
-                print("start:", start)
+            date_t = activity[3]
+            date = date_t.strftime("%m/%d/%Y")
+            start = date_t.strftime("%I:%M %p")
+            print("date", date)
+            print("start:", start)
 
-            duration = str(datetime.timedelta(seconds=activity[4]))
-            duration_format = duration[:-3]
-            print("duration:", duration_format)
+            # duration = str(datetime.timedelta(seconds=activity[4]))
+            # duration_format = duration[:-3]
+            # print("duration:", duration_format)
+            duration = str(round(activity[4] / 3600, 2))
 
-            end = str(date_t + datetime.timedelta(seconds=activity[4]))
-            end_time = end[11:]
-            if end_time[0] == '0':
-                end_time = end[12:]
+            end = (date_t + datetime.timedelta(seconds=activity[4]))
+            end_time = end.strftime("%I:%M %p")
             print("end", end_time)
 
             total += activity[4]
-            tmp = [job_id, job, des, date, start, end_time, duration_format]
+            tmp = [job_id, job, des, date, start, end_time, duration]
             writer.writerow(tmp)
 
             # writer.writerow({'Job_ID': job_id, "Job": job, "Description": des,
             #                  "Date": date, "Start": start, "End": end_time, "Duration": duration_format})
 
-        total_time = str(datetime.timedelta(seconds=total))
-        total_time_format = total_time[:-3]
+        total_time_format = str(round(total / 3600, 2))
         print("total time", total_time_format)
         writer.writerow([" ", " ", "total time", " ", " ", " ", total_time_format])
 
