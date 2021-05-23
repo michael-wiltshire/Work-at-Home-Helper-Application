@@ -7,7 +7,7 @@ from tkinter import ttk
 
 root = tk.Tk()
 tree = ttk.Treeview(root, height=25)
-tree['show']='headings'
+tree['show'] = 'headings'
 
 def display_timesheet(job: str, start_date: datetime.date, end_date: datetime.date):
     db = dbm.DatabaseManager(job)
