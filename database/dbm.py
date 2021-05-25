@@ -48,10 +48,10 @@ class DatabaseManager:
         >>> self.add_activitiy("Office hours", start, duration)
         '''
         try: 
-            # Attempt to insert the requested activity into the database
+            # Attempt to insert the requested activity into the database. We insert using the job, description, start_time, and duration
             self.cur.execute('''INSERT INTO activities
-                (job, desc, start_time, duration)
-                values
+                (job, desc, start_time, duration) 
+                values 
                 (?, ?, ?, ?)
             ''', (self.job, desc, start, duration.total_seconds()))
 
@@ -65,12 +65,13 @@ class DatabaseManager:
             # transaction and return -1, meaning that we failed.
             self.con.rollback()
             return -1
+
     def delete_activity(self, id: int) -> bool:
         '''Deletes an actvity given an ID. Returns true if successful and false if not'''
         try:
             # Attempt to delete from the database where the rowid matches
             self.cur.execute('DELETE FROM activities where (rowid = ?)',
-                    (id,)
+                    (id,) # Note that the comma after id causes this to be a tuple, which is requried
             )
             self.con.commit()
 
@@ -192,9 +193,3 @@ class DatabaseManager:
             print("in it? If so, call this function with 'yes' as an argument")
             print("example: db.reset_db('yes')")
 
-
-        
-        
-
-
-    
