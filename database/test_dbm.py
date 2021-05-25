@@ -139,11 +139,27 @@ class DatabaseBasicTests(unittest.TestCase):
         ids.append(self.dbm.add_activity("exact end of month", datetime.datetime(2021, 6, 1, 0, 0), anhour))
         ids.append(self.dbm.add_activity("after end of month", datetime.datetime(2021, 6, 2, 0, 0), anhour))
 
+        # Confirm none of them failed
+        self.assertTrue(-1 not in ids)
+
+        # Helps to count how many there are
+        self.assertEqual(len(ids), 8)
+
+        # Define the range of time we're interested in: the month of may, 2021
         start_of_may = datetime.datetime(2021, 5, 1, 0, 0)
         start_of_june = datetime.datetime(2021, 6, 1, 0, 0)
+
+        # Get activities within that range
         acts = self.dbm.get_activities_within_range(start_of_may, start_of_june)
 
+        # Confirm that there are as many activities as we expect
+        self.assertEqual(6, len(acts))
+
+        # Create a list of ids from the list of activities
         acts_ids = [act[0] for act in acts]
+
+        # Check that the ones that we expect to be in activities are in there,
+        # that the ones that we do not expect to be in there are not in there
         self.assertTrue(ids[0] in acts_ids)
         self.assertTrue(ids[1] in acts_ids)
         self.assertTrue(ids[2] in acts_ids)
