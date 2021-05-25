@@ -97,7 +97,7 @@ class DatabaseManager:
         self.cur.execute('SELECT rowid,* FROM activities order by start_time')
         return self.cur.fetchall()
 
-    def get_activies_within_range(self, start: datetime.datetime, end: datetime.datetime):
+    def get_activities_within_range(self, start: datetime.datetime, end: datetime.datetime):
         '''
         Returns a list of all activities within a certain range as a list of tuples of (
             rowid:int, job:str, description:str, start:datetime.datetime, duration:int

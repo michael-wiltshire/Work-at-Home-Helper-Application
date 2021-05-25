@@ -118,6 +118,41 @@ class DatabaseBasicTests(unittest.TestCase):
         for i in range(5):
             activity = self.dbm.get_activity(ids[i])
             self.assert_activities_equal(activity, acts[i])
+
+    def test_range_select(self):
+        # Reset the database. Check that it's empty
+        self.dbm.reset_db(sure='yes')
+        self.assertEqual(0, len(self.dbm.debug_get_all()))
+
+        # Store the length of an hour for later user
+        anhour = datetime.timedelta(seconds=3600)
+
+        # Insert a few items into the database. See the first parameter for a
+        # short description on what we're testing.
+        ids = []
+        ids.append(self.dbm.add_activity("clean in the middle of the month", datetime.datetime(2021, 5, 15, 12, 0), anhour))
+        ids.append(self.dbm.add_activity("near start of month", datetime.datetime(2021, 5, 1, 12, 0), anhour))
+        ids.append(self.dbm.add_activity("exact start of month", datetime.datetime(2021, 5, 1, 0, 0), anhour))
+        ids.append(self.dbm.add_activity("before start of month", datetime.datetime(2021, 4, 30, 23, 59), anhour))
+        ids.append(self.dbm.add_activity("near end of month", datetime.datetime(2021, 5, 30, 12, 0), anhour))
+        ids.append(self.dbm.add_activity("minute before to end of month", datetime.datetime(2021, 5, 30, 23, 59), anhour))
+        ids.append(self.dbm.add_activity("exact end of month", datetime.datetime(2021, 6, 1, 0, 0), anhour))
+        ids.append(self.dbm.add_activity("after end of month", datetime.datetime(2021, 6, 2, 0, 0), anhour))
+
+        start_of_may = datetime.datetime(2021, 5, 1, 0, 0)
+        start_of_june = datetime.datetime(2021, 6, 1, 0, 0)
+        acts = self.dbm.get_activities_within_range(start_of_may, start_of_june)
+
+        acts_ids = [act[0] for act in acts]
+        self.assertTrue(ids[0] in acts_ids)
+        self.assertTrue(ids[1] in acts_ids)
+        self.assertTrue(ids[2] in acts_ids)
+        self.assertTrue(ids[3] not in acts_ids)
+        self.assertTrue(ids[4] in acts_ids)
+        self.assertTrue(ids[5] in acts_ids)
+        self.assertTrue(ids[6] in acts_ids)
+        self.assertTrue(ids[7] not in acts_ids)
+             
     
     def assert_activities_equal(self, act1, act2):
         '''Check if two activities are equal'''
