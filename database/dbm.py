@@ -94,7 +94,7 @@ class DatabaseManager:
 
         Not supposed to be used in production. Very helpful for testing.
         '''
-        self.cur.execute('SELECT rowid,* FROM activities')
+        self.cur.execute('SELECT rowid,* FROM activities order by start_time')
         return self.cur.fetchall()
 
     def get_activies_within_range(self, start: datetime.datetime, end: datetime.datetime):
@@ -114,7 +114,9 @@ class DatabaseManager:
         # specified range and then return what it yields
         self.cur.execute('''
                 SELECT rowid,* FROM activities where not (start_time < ? or ? < start_time)
-                and (job=?)''', 
+                and (job=?)
+                order by start_time
+                ''', 
                 (start, end, self.job)
         )
 
