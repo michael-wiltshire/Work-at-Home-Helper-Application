@@ -10,21 +10,17 @@ import datetime
 import sys
 import os
 import csv
-# import xlrd
-# import openpyxl
 from io import StringIO
 
 
-def write_work_list(filename, number):
-    start = datetime.date(2021, 5, 18)
-    end = datetime.date(2021, 5, 31)
+def write_work_list(filename, db, start, end):
     start_datetime = datetime.datetime.combine(start, datetime.datetime.min.time())
     end_datetime = datetime.datetime.combine(end, datetime.datetime.min.time())
-    db = dbm.DatabaseManager('CIS 422 TA')
+    # db = dbm.DatabaseManager('CIS 422 TA')
     work = db.get_activies_within_range(start_datetime, end_datetime)
     print(work)
 
-    with open('timesheet.csv', 'w', newline='') as csvfile:
+    with open(filename, 'w', newline='') as csvfile:
         fieldnames = ['Job_ID', 'Job', 'Description', 'Date', 'Start', 'End', 'Duration']
         writer = csv.writer(csvfile)
 
@@ -68,19 +64,9 @@ def write_work_list(filename, number):
         print("total time", total_time_format)
         writer.writerow([" ", " ", "total time", " ", " ", " ", total_time_format])
 
-
-
-
-        # date = datetime.strptime(activity[3], '%Y-%m-%d %H:%M:%S.%f').strftime('%m/%d/%Y')
-        # print("date", date)
-        # duration is [4]
-        # print("day", activity[3].strftime('%a %m/%d/%y'))
-        # print("start", (activity[3]).strftime('%I:%M %p'))
-        # print("end", (activity[3] + datetime.timedelta(seconds=activity[4])).strftime('%I:%M %p'))
-        # duration = datetime.timedelta(seconds=activity[4])
-        # print(f"duration {round(duration.seconds/3600, 3)}")
-    #     total += activity[4]
-    # total_time = round(total/3600, 2)
-
-
-write_work_list(" ", 0)
+def main():
+    jobname = "sample job"
+    db = dbm.DatabaseManager(jobname, 'sample.db')
+    start = datetime.date(2021, 5, 18)
+    end = datetime.date(2021, 5, 31)
+    write_work_list('timesheet.csv', db, start, end)
