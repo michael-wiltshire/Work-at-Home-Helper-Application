@@ -1,14 +1,75 @@
+"""
+CIS 422: Project 2: Work at home helper
+Group 1: Alex Anderson, Hans Prieto, Vince Qiu, Colton Trebbien, Michael Wiltshire
+
+This file pulls information from the database and creates spreadsheet files.
+"""
+
 from tkinter import *
+import preview
+import database.dbm as db
+import datetime
 
-
-HEIGHT = 800
-WIDTH = 600
 root = Tk()
 root.title("WorkAtHomeHelper")
-root.geometry("600x800")
+root.geometry("800x800")
 
-f=("Times", 20)
+root.configure(bg='white')
+
+f=("Times", 20) 
 #Date Options
+#----------------------FRAME ONE OBJECTS--------------------------
+#Frame One is how the title is being oriented
+Frame1 = Frame(root, width= 800)
+Frame1.place(x=0, y=0, height=40, width = 800)
+
+TitleFont =("Times", 30) 
+Title = Label(Frame1, text= "WorkAtHomeHelper-V1", font=TitleFont)
+Title.place(x=0,y=0)
+#----------------------FRAMES TWO OBJECTS--------------------------
+# Freame Two is the Time module, and Preview.
+F2_Font = ("Times", 20)
+F2_background_color = 'white'
+F2_preview_label = Label("")
+Frame2 = Frame(root, width= 800, bg= F2_background_color)
+Frame2.place(x =0,y=40, height=240, width = 800)
+
+F2_preview_label = Label(Frame2, text="Click The Preview Module to Preview and Edit Your Spreadsheet")
+F2_Time_label = Label(Frame2, text="Click The Preview Module to Preview and Edit Your Spreadsheet")
+
+B_HEIGHT = 5
+B_WIDTH = 15
+B_Xvalue = 20
+B_Yvalue = 40
+
+F2_preview_label.place(x=0, y=20)
+
+def PreviewWindowOpener():
+	print("Preview Window Opener Button Pressed")
+	x = db.DatabaseManager("sample job", 'sample.db')
+	preview.display_timesheet(x,datetime.date(2021,5,1), datetime.date(2021,6,1))
+
+
+def TimeManagerOpener():
+	print("Time Manager Opener button pressed")
+
+
+Preview = Button(Frame2, text="Preview Module", command = PreviewWindowOpener,height=B_HEIGHT, width=B_WIDTH)
+Preview.place(x=0, y=B_Yvalue)
+
+Time_manager = Button(Frame2, text="Time Manager", command = TimeManagerOpener,height=B_HEIGHT, width=B_WIDTH)
+Time_manager.place(x= 500,y=B_Yvalue)
+
+
+#----------------------FRAMES THREE OBJECTS--------------------------
+# Freame Two is the Time module, and Preview.
+
+
+
+
+
+"""
+
 def Submit_Date():
 	Submitbutton = Label(root, text=clicked.get())
 	Submitbutton.pack()
@@ -16,17 +77,80 @@ def Submit_Date():
 B_HEIGHT = 5
 B_WIDTH = 15
 mylabel = Label(root, text = "test")
-myabel = grid(row=0, column = 0)
+mylabel.grid(row=0, column = 1)
 
 #--------------------------BUTTONS-----------------
-Preview = Button(root, text="Preview Module", command = Submit_Date,height=B_HEIGHT, width=B_WIDTH)
+def PreviewWindowOpener():
+	print("Preview Window Opener Button Pressed")
+	
+def TimeManagerOpener():
+	print("Time Manager Opener button pressed")
+
+def EnterStartTime():
+	print("hello")
+
+def EnterEndTime():
+	print("hello")
+
+
+
+
+Preview = Button(root, text="Preview Module", command = PreviewWindowOpener,height=B_HEIGHT, width=B_WIDTH)
 Preview.grid(row=0, column = 0)
-Time_manager = Button(root, text="Time Manager", command = Submit_Date,height=B_HEIGHT, width=B_WIDTH)
-Time_manager.grid(row=0, column = 1)
+
+
+Time_manager = Button(root, text="Time Manager", command = TimeManagerOpener,height=B_HEIGHT, width=B_WIDTH)
+Time_manager.grid(row=1, column = 0)
+
 Start_time = Button(root, text="Export ", command = Submit_Date, height=B_HEIGHT, width=B_WIDTH)
-Start_time.grid(row=1, column = 0)
-End_time = Button(root, text="Submit", command = Submit_Date, height=B_HEIGHT, width=B_WIDTH)
-End_time.grid(row=1, column = 1)
+Start_time.grid(row=2, column = 0)
+
+
+#End_time = Button(root, text="Submit a Time", command = Submit_Date, height=B_HEIGHT, width=B_WIDTH)
+#End_time.grid(row=6, column = 5)
+
+#Spin Boxes
+InsertTime = Frame(root)
+InsertTime.grid(row= 3, column = 0)
+F1 = Frame(root)
+F1.grid(row = 4, column = 0)
+
+
+
+min_sb = Spinbox(
+    F1,
+    from_=0,
+    to=23,
+    width=2,
+    font=f,
+    )
+
+sec_hour = Spinbox(
+    F1,
+    from_=0,
+    to=59,
+    font=f,
+    width=2, 
+    )
+sec = Spinbox(
+    F1,
+    from_=0,
+    to=59,
+    width=2,
+    font=f,
+    )
+
+
+
+#FOR ENTERING THE TIME
+colon_1 = Label(F1, text = ":", font = (f,20))
+colon_2 = Label(F1, text = ":", font = (f,20))
+min_sb.grid(row =  0,column = 0)
+colon_1.grid(row =  0,column = 1)
+sec_hour.grid(row = 0,column = 2)
+colon_2.grid(row = 0 ,column = 3)
+sec.grid(row = 0, column = 4)
+"""
 """
 Months = ["01", "02", "03", "04", "05", "06", "07", "08", "09","10", "11", "12"]
 Hours = []
