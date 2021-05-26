@@ -3,4 +3,18 @@ HOWTO INSTALL
 Note that this guide has been tested on Windows and Linux, but none
 of our teammates have a Macbook, so it has _not_ been tested on MacOS
 
+First: Install Python
+	  - Version 3.8.10 is recommended, but any Python 3 version should work
+	  - Ensure that TKinter gets installed with Python.
+		    - On Windows, click the custom install option and ensure the
+		    'tcl/tk and IDLE' box is checked. 
+		    - On Linux, install the python3-tk package.
+	  - 3.8.10 can be found at: https://www.python.org/downloads/release/python-3810/
+
+Second: Run maingui.py with Python
+	  - Extract all files to a folder on your computer. We recommend extracting
+	  to the desktop.
+	  - Open a terminal or command prompt and navigate to that location
+	  - Type and run `python3 maingui.py || python maingui.py`
+
 
