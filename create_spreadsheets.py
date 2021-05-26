@@ -70,3 +70,6 @@ def main():
     start = datetime.date(2021, 5, 18)
     end = datetime.date(2021, 5, 31)
     write_work_list('timesheet.csv', db, start, end)
+
+if __name__=='__main__':
+    main()
