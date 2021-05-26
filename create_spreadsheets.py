@@ -17,7 +17,7 @@ def write_work_list(filename, db, start, end):
     start_datetime = datetime.datetime.combine(start, datetime.datetime.min.time())
     end_datetime = datetime.datetime.combine(end, datetime.datetime.min.time())
     # db = dbm.DatabaseManager('CIS 422 TA')
-    work = db.get_activies_within_range(start_datetime, end_datetime)
+    work = db.get_activities_within_range(start_datetime, end_datetime)
     print(work)
 
     with open(filename, 'w', newline='') as csvfile:
