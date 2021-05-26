@@ -1,0 +1,6 @@
+HOWTO INSTALL
+
+Note that this guide has been tested on Windows and Linux, but none
+of our teammates have a Macbook, so it has _not_ been tested on MacOS
+
+
