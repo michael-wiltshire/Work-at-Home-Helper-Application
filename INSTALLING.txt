@@ -14,7 +14,8 @@ First: Install Python
 Second: Run maingui.py with Python
 	  - Extract all files to a folder on your computer. We recommend extracting
 	  to the desktop.
-	  - Open a terminal or command prompt and navigate to that location
+	  - Open a terminal or command prompt and navigate to the folder that you just
+	  extracted the program into.
 	  - Type and run `python3 maingui.py || python maingui.py`
 
 
