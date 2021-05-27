@@ -13,7 +13,7 @@ import time
 
 def main():
     root = Tk()
-    root.geometry("500x200")
+    root.geometry("600x400")
     root.title('Time Tracker')
 
 
@@ -59,8 +59,8 @@ def main():
         thisJob = db.get_activity(id)
         print(id, thisJob)
 
-    Label(root, text="Job Description").place(anchor=NW)  #label
-    Entry(root, textvariable = my_time.description, width=50).place(relx=0.5, anchor=N) #entry textbox
+    Label(root, text="Job Description:").place(anchor=NW)  #label
+    Entry(root, textvariable = my_time.description, width=50).place(relx=.55, anchor=N) #entry textbox
 
     Button(root, text="Start Time", command=clock_in,height=5,width=20,bg="green").place(relx=0.5, rely=0.5, anchor=CENTER)
 
