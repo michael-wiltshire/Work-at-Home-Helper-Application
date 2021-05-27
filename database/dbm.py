@@ -140,8 +140,8 @@ class DatabaseManager:
 
         return self.cur.fetchone()
 
-    def edit_activity(self, rowid: int, job :str = None, description :str = None, 
-            start: datetime.datetime = None, duration: datetime.timedelta = None) -> True:
+    def edit_activity(self, rowid: int, job: str = None, description :str = None, 
+            start: datetime.datetime = None, duration: datetime.timedelta = None) -> bool:
         '''
         Edits fields of a activity. Only edits fields that are not None.
 
