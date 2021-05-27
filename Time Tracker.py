@@ -57,5 +57,7 @@ def main():
     Button(root, text="Start Time", command=clock_in,height=5,width=20,bg="green").place(relx=0.5, rely=0.5, anchor=CENTER)
 
 
-    mainloop()
-main()
+    root.mainloop()
+    
+if __name__ == '__main__':
+    main()
