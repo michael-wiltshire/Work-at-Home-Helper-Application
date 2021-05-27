@@ -23,7 +23,7 @@ def main():
             self.job = "job"
             self.start_time = datetime.now()
             self.stop_time = datetime.now()
-            self.description = ""
+            self.description = "job"
             self.elapsed_time = 0
 
 
@@ -47,9 +47,9 @@ def main():
         my_time.elapsed_time = (my_time.stop_time - my_time.start_time)
         print("total time:",my_time.elapsed_time, "\n")
         db = dbm.DatabaseManager(my_time.job)
-        id = db.add_activity(my_time.description, my_time.start_time, my_time.elapsed_time)
+        id = db.add_activity(my_time.description.get(), my_time.start_time, my_time.elapsed_time)
         thisJob = db.get_activity(id)
-        print(thisJob)
+        print(id, thisJob)
 
     Label(root, text="Job Description").place(anchor=NW)  #label
     Entry(root, textvariable = my_time.description, width=50).place(relx=0.5, anchor=N) #entry textbox

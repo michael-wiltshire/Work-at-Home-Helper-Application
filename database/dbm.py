@@ -60,7 +60,8 @@ class DatabaseManager:
 
             # We return the id of the row that we just created
             return self.cur.lastrowid
-        except:
+        except Exception as e:
+            print(e)
             # If we fail somewhere in the above try statement, we must rollback (reset) the
             # transaction and return -1, meaning that we failed.
             self.con.rollback()
