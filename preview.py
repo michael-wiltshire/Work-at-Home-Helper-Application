@@ -7,8 +7,10 @@ from tkinter import ttk
 def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_date: datetime.date) -> bool:
     # create the interface for the preview module
     window = tk.Tk()
+    window.title("Preview Module")
+
     tree = ttk.Treeview(window, height=25)
-    tree['show']='headings'
+    tree['show'] = 'headings'
 
     # function to delete a certain activity
     def delete_activity():
@@ -16,6 +18,67 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
         id = tree.item(selected)["values"][0]
         db.delete_activity(id)
         tree.delete(selected)
+
+    # function to edit a certain activity
+    def edit_activity():
+        edit_window = tk.Toplevel(window)
+        edit_window.title("Edit Activity Window")
+
+        # description label
+        desc_label = tk.Label(edit_window, text="description:", font="none 12 bold")
+        desc_label.grid(row=0, column=0)
+
+        # date label
+        date_label = tk.Label(edit_window, text="date (format: MM/DD/YY):", font="none 12 bold")
+        date_label.grid(row=1, column=0)
+
+        # start label
+        start_label = tk.Label(edit_window, text="start (format: 00:00 A.M/P.M):", font="none 12 bold")
+        start_label.grid(row=2, column=0)
+
+        # duration label
+        duration_label = tk.Label(edit_window, text="duration (decimal hours)", font = "none 12 bold")
+        duration_label.grid(row=3, column=0)
+
+        # textbox to enter description
+        description_box = tk.Entry(edit_window, width=50)
+        description_box.grid(row=0, column=1)
+            
+        # textbox to enter date
+        date_box = tk.Entry(edit_window, width=20)
+        date_box.grid(row=1, column=1)
+
+        # textbox to enter start time
+        start_box = tk.Entry(edit_window, width=20)
+        start_box.grid(row=2, column=1)
+
+        # textbox to enter duration
+        duration_box = tk.Entry(edit_window, width=20)
+        duration_box.grid(row=3, column=1)
+
+        # confirm button to update activity
+        confirm_button = tk.Button(edit_window, text = "Confirm", command = None, height = 3, width = 15)
+        confirm_button.grid(row=4, column=0)
+
+        # Clear entry boxes
+        description_box.delete(0, tk.END)
+        date_box.delete(0, tk.END)
+        start_box.delete(0, tk.END)
+        duration_box.delete(0, tk.END)
+
+        # grab selected activity
+        selected = tree.focus()
+
+        # grab the values of the selected activity
+        values = tree.item(selected, 'values')
+
+        # add corresponding value to their proper entry boxes
+        description_box.insert(0, values[2])
+        date_box.insert(0, values[3])
+        start_box.insert(0, values[4])
+        duration_box.insert(0, values[6])
+        
+        edit_window.mainloop()
 
     # get start and end datetime 
     start_datetime = datetime.datetime.combine(start_date, datetime.datetime.min.time())
@@ -68,12 +131,19 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
                 i = i + 1
             except:
                 return False
+        
         tree.pack()
 
         # delete button to delete a certain activity
-        deleteButton = tk.Button(window, text = "Delete", command = delete_activity, height = 3, width = 15)
-        deleteButton.pack(side=tk.LEFT)
+        deleteButton = tk.Button(window, text = "Delete", command = delete_activity, height = 3, width = 15, bg="red", fg="white")
+        deleteButton.pack(side=tk.LEFT, padx=10)
 
+        # edit activity to edit a certain activity
+        editButton = tk.Button(window, text = "Edit", command = edit_activity, height = 3, width = 15, bg="blue", fg="white")
+        editButton.pack(side=tk.LEFT, padx = 10)
+
+        exportButton = tk.Button(window, text = "export", command=None, height=3, width = 15, bg="green", fg="white")
+        exportButton.pack(side=tk.RIGHT, padx = 10)
         # used to run the window
         window.mainloop()
 
@@ -83,6 +153,7 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
         # returns False on failure
         return False
 
+
 def main():
     jobname = "sample job"
     db = dbm.DatabaseManager(jobname, 'sample.db')
@@ -90,10 +161,12 @@ def main():
     end = datetime.date(2021, 5, 31)
 
     # add sample data
-    db.add_activity("Office Hours 4", datetime.datetime(2021, 5, 27), datetime.timedelta(hours=5))
-    db.add_activity("Office Hours 3", datetime.datetime(2021, 5, 26), datetime.timedelta(hours=4))
-    db.add_activity("Office Hours 2", datetime.datetime(2021, 5, 25), datetime.timedelta(hours=3))
-    db.add_activity("Office Hours 1", datetime.datetime(2021, 5, 24), datetime.timedelta(hours=2))
+    entries = db.debug_get_all()
+    if len(entries) == 0:
+        db.add_activity("Office Hours 4", datetime.datetime(2021, 5, 27), datetime.timedelta(hours=5))
+        db.add_activity("Office Hours 3", datetime.datetime(2021, 5, 26), datetime.timedelta(hours=4))
+        db.add_activity("Office Hours 2", datetime.datetime(2021, 5, 25), datetime.timedelta(hours=3))
+        db.add_activity("Office Hours 1", datetime.datetime(2021, 5, 24), datetime.timedelta(hours=2))
 
     display_timesheet(db, start, end)
 
