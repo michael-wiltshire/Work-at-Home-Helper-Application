@@ -42,10 +42,17 @@ def main():
         calculate_time()
 
     def calculate_time():
+        root.destroy()
+
+        root2 = Tk()
+        root2.geometry("500x200")
+        root2.title('Elapsed time')
+
         print(my_time.description.get(),"start time:", my_time.start_time,"\n","stop time:", my_time.stop_time, "\n")
         #calculates elapsed time
         my_time.elapsed_time = (my_time.stop_time - my_time.start_time)
         print("total time:",my_time.elapsed_time, "\n")
+        Label(root2, text="Elapsed time: "+str(my_time.elapsed_time)).place(anchor=NW)
         db = dbm.DatabaseManager(my_time.job)
         id = db.add_activity(my_time.description.get(), my_time.start_time, my_time.elapsed_time)
         thisJob = db.get_activity(id)
