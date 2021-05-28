@@ -11,7 +11,7 @@ import time
 
 #def create_window(string job):
 
-def main():
+def main(db: dbm.DatabaseManager):
     root = Tk()
     root.geometry("600x400")
     root.title('Time Tracker')
@@ -20,7 +20,6 @@ def main():
 
     class time():
         def __init__(self):
-            self.job = "job"
             self.start_time = datetime.now()
             self.stop_time = datetime.now()
             self.description = "job"
@@ -54,7 +53,6 @@ def main():
         print("total time:",my_time.elapsed_time, "\n")
         elapsed_time_str = str(round(my_time.elapsed_time.total_seconds() / 3600, 2))
         Label(root2, text="Elapsed time: "+elapsed_time_str + " hours").place(anchor=NW)
-        db = dbm.DatabaseManager(my_time.job)
         id = db.add_activity(my_time.description.get(), my_time.start_time, my_time.elapsed_time)
         thisJob = db.get_activity(id)
         print(id, thisJob)
@@ -68,4 +66,5 @@ def main():
     root.mainloop()
     
 if __name__ == '__main__':
-    main()
+    db = dbm.DatabaseManager("job")
+    main(db)
