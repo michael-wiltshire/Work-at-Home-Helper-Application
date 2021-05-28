@@ -1,23 +1,25 @@
 from tkinter.constants import DISABLED
 from database import dbm
+from create_spreadsheets import *
 import datetime
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 
 def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_date: datetime.date) -> bool:
     # create the interface for the preview module
     window = tk.Tk()
     window.title("Preview Module")
-
+    
     tree = ttk.Treeview(window, height=25)
     tree['show'] = 'headings'
-
+    
     # function to delete a certain activity
     def delete_activity():
         selected = tree.selection()[0]
         id = tree.item(selected)["values"][0]
         db.delete_activity(id)
         tree.delete(selected)
+
 
     # function to edit a certain activity
     def edit_activity():
@@ -56,29 +58,29 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
         duration_box = tk.Entry(edit_window, width=20)
         duration_box.grid(row=3, column=1)
 
+        # grab selected activity
+        selected = tree.focus()
+        # grab the values of the selected activity
+        selected_values = tree.item(selected, 'values')
+
+        # add corresponding value to their proper entry boxes
+        description_box.insert(0, selected_values[2])
+        date_box.insert(0, selected_values[3])
+        start_box.insert(0, selected_values[4])
+        duration_box.insert(0, selected_values[6])
+
         # confirm button to update activity
         confirm_button = tk.Button(edit_window, text = "Confirm", command = None, height = 3, width = 15)
         confirm_button.grid(row=4, column=0)
 
-        # Clear entry boxes
-        description_box.delete(0, tk.END)
-        date_box.delete(0, tk.END)
-        start_box.delete(0, tk.END)
-        duration_box.delete(0, tk.END)
 
-        # grab selected activity
-        selected = tree.focus()
+    def exportToSpreadsheet():
+        # export the data to a csv file
+        write_work_list('timesheet.csv', db, start_date, end_date)
 
-        # grab the values of the selected activity
-        values = tree.item(selected, 'values')
+        # Show messagebox indicating export was successful
+        messagebox.showinfo("Export Success", "Exported to spreadsheet file 'timesheet.csv'")
 
-        # add corresponding value to their proper entry boxes
-        description_box.insert(0, values[2])
-        date_box.insert(0, values[3])
-        start_box.insert(0, values[4])
-        duration_box.insert(0, values[6])
-        
-        edit_window.mainloop()
 
     # get start and end datetime 
     start_datetime = datetime.datetime.combine(start_date, datetime.datetime.min.time())
@@ -135,15 +137,16 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
         tree.pack()
 
         # delete button to delete a certain activity
-        deleteButton = tk.Button(window, text = "Delete", command = delete_activity, height = 3, width = 15, bg="red", fg="white")
+        deleteButton = tk.Button(window, text = "Delete", command=delete_activity, height=3, width=15, bg="red", fg="white")
         deleteButton.pack(side=tk.LEFT, padx=10)
 
         # edit activity to edit a certain activity
-        editButton = tk.Button(window, text = "Edit", command = edit_activity, height = 3, width = 15, bg="blue", fg="white")
+        editButton = tk.Button(window, text="Edit", command=edit_activity, height=3, width=15, bg="blue", fg="white")
         editButton.pack(side=tk.LEFT, padx = 10)
 
-        exportButton = tk.Button(window, text = "export", command=None, height=3, width = 15, bg="green", fg="white")
-        exportButton.pack(side=tk.RIGHT, padx = 10)
+        exportButton = tk.Button(window, text="export", command=exportToSpreadsheet, height=3, width=15, bg="green", fg="white")
+        exportButton.pack(side=tk.RIGHT, padx=10)
+
         # used to run the window
         window.mainloop()
 
@@ -163,6 +166,7 @@ def main():
     # add sample data
     entries = db.debug_get_all()
     if len(entries) == 0:
+        db.add_activity("Office Hours 5", datetime.datetime(2021, 5, 28), datetime.timedelta(hours=6))
         db.add_activity("Office Hours 4", datetime.datetime(2021, 5, 27), datetime.timedelta(hours=5))
         db.add_activity("Office Hours 3", datetime.datetime(2021, 5, 26), datetime.timedelta(hours=4))
         db.add_activity("Office Hours 2", datetime.datetime(2021, 5, 25), datetime.timedelta(hours=3))

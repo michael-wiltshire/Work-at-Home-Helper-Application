@@ -14,9 +14,11 @@ class PreviewTests(unittest.TestCase):
         end = datetime.date(2021, 5, 31)
 
         # add sample data
-        self.dbm.add_activity("Office Hours 1", datetime.datetime(2021, 5, 19), datetime.timedelta(hours=3))
-        self.dbm.add_activity("Office Hours 2", datetime.datetime(2021, 5, 20), datetime.timedelta(hours=3))
-        self.dbm.add_activity("Office Hours 3", datetime.datetime(2021, 5, 21), datetime.timedelta(hours=3))
+        entries = self.dbm.debug_get_all()
+        if len(entries) == 0:
+            self.dbm.add_activity("Office Hours 1", datetime.datetime(2021, 5, 18), datetime.timedelta(hours=2))
+            self.dbm.add_activity("Office Hours 2", datetime.datetime(2021, 5, 19), datetime.timedelta(hours=3))
+            self.dbm.add_activity("Office Hours 3", datetime.datetime(2021, 5, 20), datetime.timedelta(hours=4))
 
         self.assertTrue(preview.display_timesheet(self.dbm, start, end))
 
