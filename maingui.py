@@ -12,7 +12,7 @@ import datetime
 
 root = Tk()
 root.title("WorkAtHomeHelper")
-root.geometry("800x800")
+root.geometry("600x700")
 
 root.configure(bg='white')
 
@@ -28,6 +28,7 @@ Title = Label(Frame1, text= "WorkAtHomeHelper-V1", font=TitleFont)
 Title.place(x=0,y=0)
 #----------------------FRAMES TWO OBJECTS--------------------------
 # Freame Two is the Time module, and Preview.
+
 F2_Font = ("Times", 20)
 F2_background_color = 'white'
 F2_preview_label = Label("")
@@ -46,7 +47,7 @@ F2_preview_label.place(x=0, y=20)
 
 def PreviewWindowOpener():
 	print("Preview Window Opener Button Pressed")
-	x = db.DatabaseManager("sample job", 'sample.db')
+	x = db.DatabaseManager("sample",'sample.db')
 	preview.display_timesheet(x,datetime.date(2021,5,1), datetime.date(2021,6,1))
 
 
@@ -58,14 +59,96 @@ Preview = Button(Frame2, text="Preview Module", command = PreviewWindowOpener,he
 Preview.place(x=0, y=B_Yvalue)
 
 Time_manager = Button(Frame2, text="Time Manager", command = TimeManagerOpener,height=B_HEIGHT, width=B_WIDTH)
-Time_manager.place(x= 500,y=B_Yvalue)
+Time_manager.place(x= 300,y=B_Yvalue)
 
 
 #----------------------FRAMES THREE OBJECTS--------------------------
-# Freame Two is the Time module, and Preview.
+Frame3= Frame(root, width= 800)
+Frame3.place(x=0, y=300, height=200, width = 800)
+
+F3_MANENTRY_LABEL = Label(Frame3, text="Enter A Work Session Manually")
+F3_MANENTRY_LABEL.place(x= 0,y=0)
+
+def Submitbutton():
+	print("SUBMIT BUTTON PRESSED")
+
+F3_submit = Button(Frame3, text="Submit Time", command = PreviewWindowOpener,height=3, width=10)
+F3_submit.place(x=400, y=80)
 
 
 
+#Frame 3 Labels
+#F3_STARTDATE_LABEL = Label(Frame3, text="Start Date (M/D/Y)")
+#F3_STARTDATE_LABEL.place(x=0,y=100)
+F3_DURATION_LABEL=Label(Frame3, text="Time Worked (Hours:Mins)")
+F3_DURATION_LABEL.place(x=200,y=100)
+F3_JOBNAME_LABEL=Label(Frame3, text="Job Name:")
+F3_JOBNAME_LABEL.place(x=0,y=20)
+F3_JOBDESC_LABEL=Label(Frame3, text="Description:")
+F3_JOBDESC_LABEL.place(x=0,y=45)
+
+
+#ENTRYS
+F3_JOBENTRY = Entry(Frame3,width = 60)
+F3_JOBENTRY.place(x=80,y=20)
+F3_DESCENTRY = Entry(Frame3,width = 60)
+F3_DESCENTRY.place(x=80,y=45)
+
+#START DATE FRAME================================================
+
+SDFrame = Frame(Frame3, width= 140)
+SDFrame.place(x=0, y=90, height=80, width = 140)
+
+F3_STARTDATE_LABEL = Label(SDFrame, text="Start Date (M/D/Y)")
+F3_STARTDATE_LABEL.place(x=0,y=0)
+
+SD_MONTH = Label(SDFrame, text="Month:")
+SD_DAY   = Label(SDFrame, text="Day:")
+SD_YEAR  = Label(SDFrame, text="Year:")
+
+SD_MONTH.place(x=0,y=20)
+SD_DAY.place(x=0,y=40)
+SD_YEAR.place(x=0,y=60)
+
+SD_M_ENTRY = Entry(SDFrame,width = 10)
+SD_D_ENTRY = Entry(SDFrame,width = 10)
+SD_Y_ENTRY = Entry(SDFrame,width = 10)
+SD_M_ENTRY.place(x=50,y=20)
+SD_D_ENTRY.place(x=50,y=40)
+SD_Y_ENTRY.place(x=50,y=60)
+#START DATE FRAME================================================
+
+
+
+
+
+
+
+
+#Time FRAME--------------------------
+TFrame = Frame(Frame3, width= 120)
+TFrame.place(x=200, y=90, height=50, width = 120)
+min_sb = Spinbox(
+    TFrame,
+    from_=0,
+    to=23,
+    width=2,
+    font=f,
+    )
+
+sec_hour = Spinbox(
+    TFrame,
+    from_=0,
+    to=59,
+    font=f,
+    width=2, 
+    )
+
+colon_1 = Label(TFrame, text = ":", font = (f,20))
+min_sb.place(x=0,y=0)
+colon_1.place(x=50,y=0)
+sec_hour.place(x=65,y=0)
+#Time FRAME------------------------------
 
 
 """
