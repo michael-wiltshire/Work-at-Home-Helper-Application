@@ -14,7 +14,7 @@ def write_work_list(filename, db, start, end):
     start_datetime = datetime.datetime.combine(start, datetime.datetime.min.time())
     end_datetime = datetime.datetime.combine(end, datetime.datetime.min.time())
     work = db.get_activities_within_range(start_datetime, end_datetime)
-    print(work)
+    #print(work)
 
     with open(filename, 'w', newline='') as csv_file:
         fieldnames = ['Job_ID', 'Job', 'Description', 'Date', 'Start', 'End', 'Duration']
@@ -23,31 +23,31 @@ def write_work_list(filename, db, start, end):
 
         total = 0
         for activity in work:
-            print(activity)
+            #print(activity)
             job_id = activity[0]
-            print("job id:", job_id)
+            #print("job id:", job_id)
             job = activity[1]
-            print("job:", job)
+            #print("job:", job)
             des = activity[2]
-            print("description", des)
+            #print("description", des)
             date_t = activity[3]
             date = date_t.strftime("%m/%d/%Y")
             start = date_t.strftime("%I:%M %p")
-            print("date", date)
-            print("start:", start)
+            #print("date", date)
+            #print("start:", start)
 
             duration = str(round(activity[4] / 3600, 2))
 
             end = (date_t + datetime.timedelta(seconds=activity[4]))
             end_time = end.strftime("%I:%M %p")
-            print("end", end_time)
+            #print("end", end_time)
 
             total += activity[4]
             tmp = [job_id, job, des, date, start, end_time, duration]
             writer.writerow(tmp)
 
         total_time_format = str(round(total / 3600, 2))
-        print("total time", total_time_format)
+        #print("total time", total_time_format)
         writer.writerow([" ", " ", "total time", " ", " ", " ", total_time_format])
 
 
