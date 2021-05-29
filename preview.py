@@ -30,33 +30,25 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
         desc_label = tk.Label(edit_window, text="description:", font="none 12 bold")
         desc_label.grid(row=0, column=0)
 
-        # date label
-        date_label = tk.Label(edit_window, text="date (format: MM/DD/YY):", font="none 12 bold")
-        date_label.grid(row=1, column=0)
-
         # start label
-        start_label = tk.Label(edit_window, text="start (format: 00:00 A.M/P.M):", font="none 12 bold")
-        start_label.grid(row=2, column=0)
+        start_label = tk.Label(edit_window, text="start (format: 00:00 AM/PM):", font="none 12 bold")
+        start_label.grid(row=1, column=0)
 
         # duration label
         duration_label = tk.Label(edit_window, text="duration (decimal hours)", font = "none 12 bold")
-        duration_label.grid(row=3, column=0)
+        duration_label.grid(row=2, column=0)
 
         # textbox to enter description
         description_box = tk.Entry(edit_window, width=50)
         description_box.grid(row=0, column=1)
-            
-        # textbox to enter date
-        date_box = tk.Entry(edit_window, width=20)
-        date_box.grid(row=1, column=1)
 
         # textbox to enter start time
         start_box = tk.Entry(edit_window, width=20)
-        start_box.grid(row=2, column=1)
+        start_box.grid(row=1, column=1)
 
         # textbox to enter duration
         duration_box = tk.Entry(edit_window, width=20)
-        duration_box.grid(row=3, column=1)
+        duration_box.grid(row=2, column=1)
 
         # grab selected activity
         selected = tree.focus()
@@ -65,12 +57,62 @@ def display_timesheet(db: dbm.DatabaseManager, start_date: datetime.date, end_da
 
         # add corresponding value to their proper entry boxes
         description_box.insert(0, selected_values[2])
-        date_box.insert(0, selected_values[3])
         start_box.insert(0, selected_values[4])
         duration_box.insert(0, selected_values[6])
 
+        def edit_activity_helper():
+            # get id and job of selected activity
+            selected_id = selected_values[0]
+            selected_job = selected_values[1]
+
+            # get the new description of the selected activity
+            new_desc = description_box.get()
+
+            # get date of selected activity
+            date = selected_values[3] 
+
+            # convert string date to actual date object
+            date_object = datetime.datetime.strptime(date, "%m/%d/%y").date()
+
+            # get new start time of activity
+            new_start = start_box.get() 
+            
+            # convert new start time to a time object
+            new_start_object = datetime.datetime.strptime(new_start, "%I:%M %p").time()
+
+            # combine date and new start to single datetime object
+            combined_datetime = datetime.datetime.combine(date_object, new_start_object)
+
+            # get new duration in hours and seconds
+            new_dur_hours = duration_box.get()
+            new_dur_seconds = datetime.timedelta(seconds=(float(new_dur_hours) * 3600))
+
+            # calculate new end time, and convert to a string time
+            new_end = combined_datetime + datetime.timedelta(hours=float(new_dur_hours))
+            new_end_str = new_end.strftime("%I:%M %p")
+
+            # update activity in table
+            tree.item(selected, text="", values=(selected_id, selected_job, new_desc, date, new_start, new_end_str, new_dur_hours))
+            
+            # update activity in database
+            did_edit = db.edit_activity(rowid=selected_id, job=selected_job, description=new_desc, start=combined_datetime, duration=new_dur_seconds)
+
+            # determine if the activity was also edited in the database
+            if did_edit:
+                # close the edit window
+                edit_window.destroy()
+
+                # message that shows the activity was edited successfully
+                messagebox.showinfo("Edit Success", "Edited activity succesfully.")
+            else:
+                # close the edit window
+                edit_window.destroy()
+
+                # message that shows the activity failed to be edited in the database
+                messagebox.showerror("Edit Failure", "Failure to edit activity in database")
+
         # confirm button to update activity
-        confirm_button = tk.Button(edit_window, text = "Confirm", command = None, height = 3, width = 15)
+        confirm_button = tk.Button(edit_window, text = "Confirm", command = edit_activity_helper, height = 3, width = 15)
         confirm_button.grid(row=4, column=0)
 
 
@@ -161,16 +203,25 @@ def main():
     jobname = "sample job"
     db = dbm.DatabaseManager(jobname, 'sample.db')
     start = datetime.date(2021, 5, 18)
-    end = datetime.date(2021, 5, 31)
+    end = datetime.date(2021, 6, 1)
 
     # add sample data
     entries = db.debug_get_all()
     if len(entries) == 0:
-        db.add_activity("Office Hours 5", datetime.datetime(2021, 5, 28), datetime.timedelta(hours=6))
-        db.add_activity("Office Hours 4", datetime.datetime(2021, 5, 27), datetime.timedelta(hours=5))
-        db.add_activity("Office Hours 3", datetime.datetime(2021, 5, 26), datetime.timedelta(hours=4))
-        db.add_activity("Office Hours 2", datetime.datetime(2021, 5, 25), datetime.timedelta(hours=3))
-        db.add_activity("Office Hours 1", datetime.datetime(2021, 5, 24), datetime.timedelta(hours=2))
+        db.add_activity("Office Hours 1", datetime.datetime(2021, 5, 18, 11, 0), datetime.timedelta(hours=1))
+        db.add_activity("Office Hours 2", datetime.datetime(2021, 5, 19, 11, 0), datetime.timedelta(hours=2))
+        db.add_activity("Office Hours 3", datetime.datetime(2021, 5, 20, 11, 0), datetime.timedelta(hours=5))
+        db.add_activity("Office Hours 4", datetime.datetime(2021, 5, 21, 9, 0), datetime.timedelta(hours=3))
+        db.add_activity("Office Hours 5", datetime.datetime(2021, 5, 22, 13, 0), datetime.timedelta(hours=3))
+        db.add_activity("Office Hours 6", datetime.datetime(2021, 5, 23, 14, 0), datetime.timedelta(hours=3))
+        db.add_activity("Office Hours 7", datetime.datetime(2021, 5, 24, 12, 0), datetime.timedelta(hours=2))
+        db.add_activity("Office Hours 8", datetime.datetime(2021, 5, 25, 10, 0), datetime.timedelta(hours=3))
+        db.add_activity("Office Hours 9", datetime.datetime(2021, 5, 26, 8, 0), datetime.timedelta(hours=4))
+        db.add_activity("Office Hours 10", datetime.datetime(2021, 5, 27, 9, 0), datetime.timedelta(hours=5))
+        db.add_activity("Office Hours 11", datetime.datetime(2021, 5, 28, 8, 0), datetime.timedelta(hours=6))
+        db.add_activity("Office Hours 12", datetime.datetime(2021, 5, 29, 10, 0), datetime.timedelta(hours=6))
+        db.add_activity("Office Hours 13", datetime.datetime(2021, 5, 30, 11, 0), datetime.timedelta(hours=2))
+        db.add_activity("Office Hours 14", datetime.datetime(2021, 5, 31, 11, 0), datetime.timedelta(hours=5))
 
     display_timesheet(db, start, end)
 
