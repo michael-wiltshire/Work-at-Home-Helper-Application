@@ -17,12 +17,14 @@ def write_work_list(filename, db, start, end):
     #print(work)
 
     with open(filename, 'w', newline='') as csv_file:
+        """Create a csv file and write its first row with the elements we want"""
         fieldnames = ['Job_ID', 'Job', 'Description', 'Date', 'Start', 'End', 'Duration']
         writer = csv.writer(csv_file)
         writer.writerow(fieldnames)
 
         total = 0
         for activity in work:
+            """to get the information in database and then put them into the spreadsheet"""
             #print(activity)
             job_id = activity[0]
             #print("job id:", job_id)
@@ -52,6 +54,7 @@ def write_work_list(filename, db, start, end):
 
 
 def main():
+    """main"""
     jobname = "sample job"
     db = dbm.DatabaseManager(jobname, 'sample.db')
     start = datetime.date(2021, 5, 18)
