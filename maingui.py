@@ -31,19 +31,68 @@ Title.place(x=0,y=0)
 
 F2_Font = ("Times", 20)
 F2_background_color = 'white'
-F2_preview_label = Label("")
+
 Frame2 = Frame(root, width= 800, bg= F2_background_color)
 Frame2.place(x =0,y=40, height=240, width = 800)
-
-F2_preview_label = Label(Frame2, text="Click The Preview Module to Preview and Edit Your Spreadsheet")
-F2_Time_label = Label(Frame2, text="Click The Preview Module to Preview and Edit Your Spreadsheet")
+ 
+F2_preview_label = Label(Frame2, text="Click The Preview Module to Preview and Edit Your spreadsheet 		")
+F2_Time_label = Label(Frame2, text="Click The Time Manager Module To Automatically Track and Submit Time 	")
 
 B_HEIGHT = 5
 B_WIDTH = 15
 B_Xvalue = 20
 B_Yvalue = 40
 
-F2_preview_label.place(x=0, y=20)
+F2_preview_label.place(x=0, y=0)
+F2_Time_label.place(x=0, y=20)
+
+#PREVIEW MODULE START AND END DATES
+
+PSFRAME = Frame(Frame2, width= 140)
+PSFRAME.place(x=200, y=45, height=95, width = 140)
+
+P_START_LABEL = Label(PSFRAME, text="Start Date (M/D/Y)")
+P_START_LABEL.place(x=0,y=0)
+
+
+S_MONTH = Label(PSFRAME, text="Month:")
+S_DAY   = Label(PSFRAME, text="Day:")
+S_YEAR  = Label(PSFRAME, text="Year:")
+
+S_MONTH.place(x=0,y=20)
+S_DAY.place(x=0,y=40)
+S_YEAR.place(x=0,y=60)
+
+PS_M_ENTRY = Entry(PSFRAME,width = 10)
+PS_D_ENTRY = Entry(PSFRAME,width = 10)
+PS_Y_ENTRY = Entry(PSFRAME,width = 10)
+PS_M_ENTRY.place(x=50,y=20)
+PS_D_ENTRY.place(x=50,y=40)
+PS_Y_ENTRY.place(x=50,y=60)
+#END TIME ============================================
+#PREVIEW MODULE START AND END DATES
+PEFRAME = Frame(Frame2, width= 140)
+PEFRAME.place(x=350, y=45, height=95, width = 140)
+
+P_END_LABEL = Label(PEFRAME, text="END DATE (M/D/Y)")
+P_END_LABEL.place(x=0,y=0)
+
+E_MONTH = Label(PEFRAME, text="Month:")
+E_DAY   = Label(PEFRAME, text="Day:")
+E_YEAR  = Label(PEFRAME, text="Year:")
+
+E_MONTH.place(x=0,y=20)
+E_DAY.place(x=0,y=40)
+E_YEAR.place(x=0,y=60)
+
+PE_M_ENTRY = Entry(PEFRAME,width = 10)
+PE_D_ENTRY = Entry(PEFRAME,width = 10)
+PE_Y_ENTRY = Entry(PEFRAME,width = 10)
+PE_M_ENTRY.place(x=50,y=20)
+PE_D_ENTRY.place(x=50,y=40)
+PE_Y_ENTRY.place(x=50,y=60)
+
+#==============================================
 
 def PreviewWindowOpener():
 	print("Preview Window Opener Button Pressed")
@@ -54,17 +103,16 @@ def PreviewWindowOpener():
 def TimeManagerOpener():
 	print("Time Manager Opener button pressed")
 
-
 Preview = Button(Frame2, text="Preview Module", command = PreviewWindowOpener,height=B_HEIGHT, width=B_WIDTH)
-Preview.place(x=0, y=B_Yvalue)
+Preview.place(x=50, y=B_Yvalue+2)
 
 Time_manager = Button(Frame2, text="Time Manager", command = TimeManagerOpener,height=B_HEIGHT, width=B_WIDTH)
-Time_manager.place(x= 300,y=B_Yvalue)
+Time_manager.place(x= 50,y=141)
 
 
 #----------------------FRAMES THREE OBJECTS--------------------------
 Frame3= Frame(root, width= 800)
-Frame3.place(x=0, y=300, height=200, width = 800)
+Frame3.place(x=0, y=300, height=250, width = 800)
 
 F3_MANENTRY_LABEL = Label(Frame3, text="Enter A Work Session Manually")
 F3_MANENTRY_LABEL.place(x= 0,y=0)
@@ -73,15 +121,12 @@ def Submitbutton():
 	print("SUBMIT BUTTON PRESSED")
 
 F3_submit = Button(Frame3, text="Submit Time", command = PreviewWindowOpener,height=3, width=10)
-F3_submit.place(x=400, y=80)
-
-
+F3_submit.place(x=0, y=180)
 
 #Frame 3 Labels
 #F3_STARTDATE_LABEL = Label(Frame3, text="Start Date (M/D/Y)")
 #F3_STARTDATE_LABEL.place(x=0,y=100)
-F3_DURATION_LABEL=Label(Frame3, text="Time Worked (Hours:Mins)")
-F3_DURATION_LABEL.place(x=200,y=100)
+
 F3_JOBNAME_LABEL=Label(Frame3, text="Job Name:")
 F3_JOBNAME_LABEL.place(x=0,y=20)
 F3_JOBDESC_LABEL=Label(Frame3, text="Description:")
@@ -118,16 +163,49 @@ SD_D_ENTRY.place(x=50,y=40)
 SD_Y_ENTRY.place(x=50,y=60)
 #START DATE FRAME================================================
 
+#START TIME FRAME===============================================
+STARTFrame = Frame(Frame3, width= 120)
+STARTFrame.place(x=200, y=90, height=70, width = 120)
+
+IST =Label(STARTFrame, text="Intial Start Time")
+IST.place(x=0,y=0)
+
+SF_min_sb = Spinbox(
+    STARTFrame,
+    from_=0,
+    to=59,
+    width=2,
+    font=f,
+    )
+
+SF_sec_hour = Spinbox(
+    STARTFrame,
+    from_=0,
+    to=12,
+    font=f,
+    width=2, 
+    )
 
 
+#NEED AM/PM meu 
 
 
+colon_2 = Label(STARTFrame, text = ":", font = (f,20))
+SF_min_sb.place(x=65,y=20)
+colon_2.place(x=50,y=20)
+SF_sec_hour.place(x=0,y=20)
+
+#create_activity
 
 
 
 #Time FRAME--------------------------
 TFrame = Frame(Frame3, width= 120)
-TFrame.place(x=200, y=90, height=50, width = 120)
+TFrame.place(x=400, y=90, height=100, width = 120)
+
+F3_DURATION_LABEL=Label(TFrame, text="Time Worked")
+F3_DURATION_LABEL.place(x=0,y=0)
+
 min_sb = Spinbox(
     TFrame,
     from_=0,
@@ -144,10 +222,24 @@ sec_hour = Spinbox(
     width=2, 
     )
 
-colon_1 = Label(TFrame, text = ":", font = (f,20))
-min_sb.place(x=0,y=0)
-colon_1.place(x=50,y=0)
-sec_hour.place(x=65,y=0)
+TIME = ["AM","PM"]
+clicked = StringVar()
+clicked.set(TIME[0])
+drop = OptionMenu(root, clicked, *TIME)
+
+
+
+T_HOURS = Label(TFrame, text="Hours")
+T_MINS  = Label(TFrame, text="Mins")
+T_HOURS.place(x=60,y=25)
+T_MINS.place(x=60,y=55)
+
+
+IST =Label(STARTFrame, text="Intial Start Time")
+IST.place(x=0,y=0)
+
+min_sb.place(x=0,y=20)
+sec_hour.place(x=0,y=50)
 #Time FRAME------------------------------
 
 
