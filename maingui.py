@@ -11,21 +11,21 @@ from database import dbm
 import datetime
 import timetracker
 
+"""
+Tkninter CONFIGURATION
+"""
 root = Tk()
 root.title("WorkAtHomeHelper")
 root.geometry("510x600")
-
 root.configure(bg='white')
+f=("Times", 20) 
 
 """
 DATABASE CONFIGURATION
 """
-
 Jobname = "Learning Assistant"
 db = dbm.DatabaseManager(Jobname, 'JobDatabase.db')
 
-
-f=("Times", 20) 
 #Date Options
 #----------------------FRAME ONE OBJECTS--------------------------
 #Frame One is how the title is being oriented
@@ -150,12 +150,6 @@ Frame3.place(x=0, y=300, height=250, width = 800)
 F3_MANENTRY_LABEL = Label(Frame3, text="Enter A Work Session Manually")
 F3_MANENTRY_LABEL.place(x= 0,y=0)
 
-def Submitbutton():
-	print("SUBMIT BUTTON PRESSED")
-
-
-F3_submit = Button(Frame3, text="Submit Time", command = Submitbutton,height=3, width=10)
-F3_submit.place(x=0, y=180)
 
 #Frame 3 Labels
 
@@ -238,7 +232,6 @@ SF_sec_hour.place(x=0,y=20)
 #create_activity
 
 
-
 #Time FRAME--------------------------
 TFrame = Frame(Frame3, width= 120)
 TFrame.place(x=400, y=90, height=100, width = 120)
@@ -275,6 +268,30 @@ IST.place(x=0,y=0)
 
 min_sb.place(x=0,y=20)
 sec_hour.place(x=0,y=50)
+
+def Submitbutton():
+	print("SUBMIT BUTTON PRESSED")
+	#Get The start date
+	sub_jobdesc = F3_DESCENTRY.get()
+	sub_sdem = SD_M_ENTRY.get()
+	sub_sded = SD_D_ENTRY.get()
+	sub_sdey = SD_Y_ENTRY.get()
+
+	in_h = SF_min_sb.get()
+	in_m = SF_sec_hour.get()
+
+	t_m = min_sb.get()
+	t_h = sec_hour.get()
+
+	M_PM = clicked.get()
+
+	print(f"{sub_jobdesc} {sub_sdey}/{sub_sdem}/{sub_sded} IT: {in_h}:{in_m} {M_PM} TW: {t_h}:{t_m} ")
+
+
+
+F3_submit = Button(Frame3, text="Submit Time", command = Submitbutton,height=3, width=10)
+F3_submit.place(x=0, y=180)
+
 #Time FRAME------------------------------
 
 
