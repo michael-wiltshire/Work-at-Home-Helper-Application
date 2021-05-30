@@ -27,8 +27,7 @@ def tracktime(db: dbm.DatabaseManager):
 
 
     my_time = time()
-    my_time.description = StringVar()
-
+    my_time.description = StringVar(root)
 
 
     def clock_in():
