@@ -11,7 +11,7 @@ import time
 
 #def create_window(string job):
 
-def main(db: dbm.DatabaseManager):
+def tracktime(db: dbm.DatabaseManager):
     root = Tk()
     root.geometry("600x400")
     root.title('Time Tracker')
@@ -67,4 +67,4 @@ def main(db: dbm.DatabaseManager):
     
 if __name__ == '__main__':
     db = dbm.DatabaseManager("job")
-    main(db)
+    tracktime(db)

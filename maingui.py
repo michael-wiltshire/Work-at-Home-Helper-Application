@@ -7,14 +7,23 @@ This file pulls information from the database and creates spreadsheet files.
 
 from tkinter import *
 import preview
-import database.dbm as db
+from database import dbm
 import datetime
+import timetracker
 
 root = Tk()
 root.title("WorkAtHomeHelper")
-root.geometry("600x700")
+root.geometry("510x600")
 
 root.configure(bg='white')
+
+"""
+DATABASE CONFIGURATION
+"""
+
+Jobname = "Learning Assistant"
+db = dbm.DatabaseManager(Jobname, 'JobDatabase.db')
+
 
 f=("Times", 20) 
 #Date Options
@@ -35,7 +44,7 @@ F2_background_color = 'white'
 Frame2 = Frame(root, width= 800, bg= F2_background_color)
 Frame2.place(x =0,y=40, height=240, width = 800)
  
-F2_preview_label = Label(Frame2, text="Click The Preview Module to Preview and Edit Your spreadsheet 		")
+F2_preview_label = Label(Frame2, text="Click The Preview Module to Preview, Edit and Print Your spreadsheet 		")
 F2_Time_label = Label(Frame2, text="Click The Time Manager Module To Automatically Track and Submit Time 	")
 
 B_HEIGHT = 5
@@ -95,12 +104,36 @@ PE_Y_ENTRY.place(x=50,y=60)
 #==============================================
 
 def PreviewWindowOpener():
+	#GET START DATE
+	s_month = (PS_M_ENTRY.get()) #START MONTH
+	print(s_month)
+	s_day = (PS_D_ENTRY.get())	#START DAY
+	s_year = (PS_Y_ENTRY.get())	#START YEAR
+	#GET END DATE
+	e_month = (PS_M_ENTRY.get()) #END MONTH
+	e_day = (PS_D_ENTRY.get())	#END DAY
+	e_year = (PS_Y_ENTRY.get())	#END YEAR
+	if ((s_month or s_day or s_year or e_month or e_day or e_year) == ''):
+		ps_default = datetime.date(1,1,1)
+		pe_default = datetime.date(3000,1,1)
+		preview.display_timesheet(db, ps_default, pe_default)
+		return
+
+	p_start = datetime.date(int(s_year),int(s_month), int(s_day))
+	p_end = datetime.datetime(int(e_year),int(e_month), int(e_day))
+
+	print(f"START DATE:{s_month}/{s_day}/{s_year}")
+	print(f"END DATE:{e_month}/{e_day}/{e_year}")
 	print("Preview Window Opener Button Pressed")
-	x = db.DatabaseManager("sample",'sample.db')
-	preview.display_timesheet(x,datetime.date(2021,5,1), datetime.date(2021,6,1))
+	preview.display_timesheet(db, p_start, p_end)
+	#x = db.DatabaseManager("sample",'sample.db')
+	#preview.display_timesheet(x,datetime.date(2021,5,1), datetime.date(2021,6,1))
+
+
 
 
 def TimeManagerOpener():
+	timetracker.tracktime(db)
 	print("Time Manager Opener button pressed")
 
 Preview = Button(Frame2, text="Preview Module", command = PreviewWindowOpener,height=B_HEIGHT, width=B_WIDTH)
@@ -120,18 +153,16 @@ F3_MANENTRY_LABEL.place(x= 0,y=0)
 def Submitbutton():
 	print("SUBMIT BUTTON PRESSED")
 
-F3_submit = Button(Frame3, text="Submit Time", command = PreviewWindowOpener,height=3, width=10)
+
+F3_submit = Button(Frame3, text="Submit Time", command = Submitbutton,height=3, width=10)
 F3_submit.place(x=0, y=180)
 
 #Frame 3 Labels
-#F3_STARTDATE_LABEL = Label(Frame3, text="Start Date (M/D/Y)")
-#F3_STARTDATE_LABEL.place(x=0,y=100)
 
 F3_JOBNAME_LABEL=Label(Frame3, text="Job Name:")
 F3_JOBNAME_LABEL.place(x=0,y=20)
 F3_JOBDESC_LABEL=Label(Frame3, text="Description:")
 F3_JOBDESC_LABEL.place(x=0,y=45)
-
 
 #ENTRYS
 F3_JOBENTRY = Entry(Frame3,width = 60)
@@ -140,7 +171,6 @@ F3_DESCENTRY = Entry(Frame3,width = 60)
 F3_DESCENTRY.place(x=80,y=45)
 
 #START DATE FRAME================================================
-
 SDFrame = Frame(Frame3, width= 140)
 SDFrame.place(x=0, y=90, height=80, width = 140)
 
@@ -161,13 +191,12 @@ SD_Y_ENTRY = Entry(SDFrame,width = 10)
 SD_M_ENTRY.place(x=50,y=20)
 SD_D_ENTRY.place(x=50,y=40)
 SD_Y_ENTRY.place(x=50,y=60)
-#START DATE FRAME================================================
 
 #START TIME FRAME===============================================
-STARTFrame = Frame(Frame3, width= 120)
-STARTFrame.place(x=200, y=90, height=70, width = 120)
+STARTFrame = Frame(Frame3, width= 200)
+STARTFrame.place(x=170, y=90, height=70, width = 200)
 
-IST =Label(STARTFrame, text="Intial Start Time")
+IST =Label(STARTFrame, text="Intial Start Time (H:M AM/PM)")
 IST.place(x=0,y=0)
 
 SF_min_sb = Spinbox(
@@ -186,6 +215,17 @@ SF_sec_hour = Spinbox(
     width=2, 
     )
 
+
+def show():
+	AM_PM = clicked.get()
+	print(AM_PM)
+
+
+TIME = ["AM","PM"]
+clicked = StringVar()
+clicked.set(TIME[0])
+drop = OptionMenu(STARTFrame, clicked, *TIME)
+drop.place(x=120,y=20)
 
 #NEED AM/PM meu 
 
@@ -221,11 +261,6 @@ sec_hour = Spinbox(
     font=f,
     width=2, 
     )
-
-TIME = ["AM","PM"]
-clicked = StringVar()
-clicked.set(TIME[0])
-drop = OptionMenu(root, clicked, *TIME)
 
 
 
