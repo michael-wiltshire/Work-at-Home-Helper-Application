@@ -104,8 +104,6 @@ PE_D_ENTRY.place(x=50,y=40)
 PE_Y_ENTRY.place(x=50,y=60)
 
 
-
-
 #==============================================
 
 def PreviewWindowOpener():
@@ -118,21 +116,55 @@ def PreviewWindowOpener():
 	e_month = (PE_M_ENTRY.get()) #END MONTH
 	e_day = (PE_D_ENTRY.get())	#END DAY
 	e_year = (PE_Y_ENTRY.get())	#END YEAR
-	if ((s_month or s_day or s_year or e_month or e_day or e_year) == ''):
+	if ((s_month == '') and (s_day == '') and (s_year == '') and (e_month == '') and (e_day== '') and (e_year== '')):
+		NoteLabel.config(text="Default Preview Window Opened")
 		ps_default = datetime.date(1,1,1)
 		pe_default = datetime.date(3000,1,1)
 		preview.display_timesheet(db, ps_default, pe_default)
 		return
 
-	p_start = datetime.date(int(s_year),int(s_month), int(s_day))
-	p_end = datetime.datetime(int(e_year),int(e_month), int(e_day))
+	
 
-	print(f"START DATE:{s_month}/{s_day}/{s_year}")
-	print(f"END DATE:{e_month}/{e_day}/{e_year}")
-	print("Preview Window Opener Button Pressed")
-	preview.display_timesheet(db, p_start, p_end)
+	
 	#x = db.DatabaseManager("sample",'sample.db')
 	#preview.display_timesheet(x,datetime.date(2021,5,1), datetime.date(2021,6,1))
+
+	NoteLabel.config(text="Specific Dates Preview Window")
+	try:
+		p_start = datetime.date(int(s_year),int(s_month), int(s_day))
+		p_end = datetime.datetime(int(e_year),int(e_month), int(e_day))
+		U_desc = "Start Date" + str(p_start)
+		U_date = "End date" + str(p_end)
+
+		Update_label_desc.config(text= U_desc)
+		Update_label_date.config(text=U_date)
+		
+
+		p_start = datetime.date(int(s_year),int(s_month), int(s_day))
+		p_end = datetime.datetime(int(e_year),int(e_month), int(e_day))
+
+		print(f"START DATE:{s_month}/{s_day}/{s_year}")
+		print(f"END DATE:{e_month}/{e_day}/{e_year}")
+		print("Preview Window Opener Button Pressed")
+		preview.display_timesheet(db, p_start, p_end)
+		return
+	except:
+		U_desc = "ERROR: Couldnt Process Input"
+		U_date = "Make sure all feilds are filled or empty"
+		U_tw = "With positive (>0) integers"
+
+		Update_label_desc.config(text= U_desc)
+		Update_label_date.config(text=U_date)
+		Update_label_timework.config(text=U_tw)
+		return
+
+
+
+
+
+	#UPDATE DISPLAY HANDLER
+
+
 
 
 
@@ -166,7 +198,7 @@ F3_JOBDESC_LABEL.place(x=0,y=20)
 #ENTRYS
 #F3_JOBENTRY = Entry(Frame3,width = 60)
 #F3_JOBENTRY.place(x=80,y=20)
-F3_DESCENTRY = Entry(Frame3,width = 60)
+F3_DESCENTRY = Entry(Frame3,width = 50)
 F3_DESCENTRY.place(x=80,y=20)
 
 #START DATE FRAME================================================
@@ -318,38 +350,6 @@ def Submitbutton():
 		Update_label_date.config(text=U_date)
 		Update_label_timework.config(text=U_tw)
 
-
-
-
-	"""
-	try:
-		NoteLabel.config(text="Manual Date Entered")
-		if((sub_jobdesc or sub_sdey or sub_sdem or sub_sded) == ''):
-			U_desc = "ERROR: Couldnt Process Input"
-			U_date = ""
-			U_tw = ""
-			print("no feild entered")
-
-		else:
-			U_desc = "Desc: " + str(sub_jobdesc)
-			U_date = "Date: " + str(datetime.datetime(int(sub_sdey), int(sub_sdem), int(sub_sded),int(in_h), int(in_m)))
-			U_tw = "Timeworked: " + str(datetime.timedelta(hours=int(t_h) ,minutes=int(t_m)))
-	except:
-		U_desc = "ERROR: Couldnt Process Input"
-		U_date = ""
-		U_tw = ""
-	"""
-
-	"""
-	Update_label_desc.config(text= U_desc)
-	Update_label_date.config(text=U_date)
-	Update_label_timework.config(text=U_tw)
-
-
-	db.add_activity(sub_jobdesc , datetime.datetime(int(sub_sdey), int(sub_sdem), int(sub_sded),int(in_h), int(in_m)),
-	 datetime.timedelta(hours=int(t_h) ,minutes=int(t_m)))
-	 """
-
 F3_submit = Button(Frame3, text="Submit Time", command = Submitbutton,height=3, width=10)
 F3_submit.place(x=200, y=150)
 
@@ -357,7 +357,7 @@ F3_submit.place(x=200, y=150)
 NoteFrame = Frame(Frame2, width= 290, borderwidth = 2, relief = "ridge")
 NoteFrame.place(x=200, y= 143, height=97, width = 290)
 
-NoteLabel = Label(NoteFrame, text="Input Display")
+NoteLabel = Label(NoteFrame, text="Input Display Handler")
 NoteLabel.place(x=0,y=0)
 
 Update_label_desc = Label(NoteFrame, text="")
