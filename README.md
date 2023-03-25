@@ -15,4 +15,4 @@ Users can press a button to clock in when they start working and clock out when 
 If the user does not use the clock in and out feature, they can enter the time worked manually and make edits as necessary.
 * Spreadsheet preview and creation mode: Users can preview and edit their timesheets before exporting them as a CSV file.
 Installation and Usage
-To install the system, clone this repository and run it on your local machine. To use the system, open the main.py file and follow the prompts.
+To install the system, clone this repository and run it on your local machine, and follow the directions in INSTRUCTIONS.txt.
